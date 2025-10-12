@@ -1,0 +1,31 @@
+Schemas - 
+
+1. Customer (Name, DOB, Username, Password, Email, PhoneNumber)
+2. Seller (SellerId, SellerName)
+2. Product (ProductID, ProductName, Description, SellerId, Price, Category)
+3. Order (OrderID, Username, ProductID, OrderDate)
+4. Cart (Username, ProductID, Quantity)
+
+User and Product are going to be defined in RDS, while Order and Cart are in DynamoDB.
+
+For each microservice ...
+Write the business logic (Node.js).
+Create a Lambda function.
+Define its data store (DynamoDB table or RDS schema).
+Use API Gateway to create a REST endpoint (/users, /products, /cart, /orders).
+Use Secrets Manager for any API keys (e.g., Stripe, SendGrid).
+
+So the structure goes like:
+service/
+    model/
+    routes/
+    main.js
+
+Still need plans on how to do:
+1. API Gateway
+2. Email and notification service
+3. Infrastructure as Code
+4. Payment service
+
+Final list of microservices -
+Customer Service, Product Catalog Service, Shopping Cart Service, Order Service, Notification Service and Payment Service
