@@ -29,3 +29,73 @@ Still need plans on how to do:
 
 Final list of microservices -
 Customer Service, Product Catalog Service, Shopping Cart Service, Order Service, Notification Service and Payment Service
+
+RDS -
+
+-- Customers Table
+CREATE TABLE customers (
+    username VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    dob DATE,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone_number VARCHAR(15),
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+Functions - 
+1. Add a customer (POST /customer)
+2. Get information about customer (GET /customer/{username})
+3. Update customer details (PUT /customer/{username})
+4. Delete customer details (DELETE /customer/{username})
+
+-- Sellers Table  
+CREATE TABLE sellers (
+    seller_id SERIAL PRIMARY KEY,
+    seller_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Products Table
+CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(200) NOT NULL,
+    description TEXT,
+    seller_id INTEGER REFERENCES sellers(seller_id),
+    price DECIMAL(10,2) NOT NULL,
+    category VARCHAR(50),
+    stock_quantity INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DynamoDB -
+
+-- Cart Table
+{
+    "username": "", // partition key (string)
+    "product_id": "", // sort key (string)
+    "quantity": 0, //number
+    "added_at": "2023-10-01T10:30:00Z"
+}
+
+// Orders Table - Partition Key: order_id
+{
+  "order_id": "ORD-123456",        // Partition Key (String)
+  "username": "john_doe",
+  "order_date": "2023-10-01T10:30:00Z",
+  "status": "pending",             // pending, confirmed, shipped, delivered
+  "total_amount": 99.98,
+  "items": [
+    {
+      "product_id": "123",
+      "quantity": 2,
+      "price": 49.99
+    }
+  ],
+  "shipping_address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "zip": "10001"
+  }
+}
