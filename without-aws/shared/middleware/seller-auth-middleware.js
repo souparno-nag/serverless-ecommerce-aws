@@ -12,18 +12,12 @@ const sellerAuthMiddleware = (req, res, next) => {
     }
     try {
         const decodedTokenInfo = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        const {id, seller_id} = decodedTokenInfo;
+        const {id, _} = decodedTokenInfo;
         const checkSeller = Seller.findById(id);
         if (!checkSeller) {
             return res.status(403).json({
                 success : false,
-                message : 'Access denied. Invalid id or seller_id'
-            });
-        }
-        if (checkSeller.seller_id != seller_id) {
-            return res.status(403).json({
-                success : false,
-                message : 'Access denied. Invalid id or seller_id'
+                message : 'Access denied. Invalid id'
             });
         }
         next();
