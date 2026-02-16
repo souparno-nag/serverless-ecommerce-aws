@@ -1,4 +1,6 @@
 const Order = require('../model/Order');
+const Product = require('../../product/models/Product');
+import { v4 as uuidv4 } from 'uuid';
 
 const getCustomerOrders = async (req, res) => {
     const authHeader = req.headers['authorization'];
@@ -57,7 +59,45 @@ const getSingleCustomerOrder = async (req, res) => {
 
 const placeCustomerOrder = async (req, res) => {
     try {
-        const newOrder = req.body;
+        const newOrderRequest = req.body;
+        const {customerId, items, shipping_address} = newOrderRequest;
+        const order_id = uuidv4();
+        const total_amount = 0;
+        for (let prod of items) {
+            const {product_id, quantity} = prod;
+            const productDetailsById = await Product.find({product_id});
+            const {price, stock_quantity} = productDetailsById;
+            if (quantity > stock_quantity) {
+                return res.status(422).json({
+                    success: false,
+                    message: 'Not enough products in stock to meet current rquirement'
+                });
+            }
+            total_amount += quantity * price;
+        }
+        for (let prod of items) {
+            const {product_id, quantity} = prod;
+            const productDetailsById = await Product.find({product_id});
+            const {stock_quantity} = productDetailsById;
+            stock_quantity -= quantity;
+            productDetailsById[stock_quantity] = stock_quantity;
+        }
+        const newOrder = {
+            order_id,
+            customerId,
+            order_date: Date.now(),
+            items,
+            shipping_address,
+            total_amount
+        };
+        const newlyCreatedOrder = await Order.create(newOrder);
+        if (newlyCreatedOrder) {
+            res.status(200).json({
+                success: true,
+                message: 'Order added successfully',
+                data: newlyCreatedOrder
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -67,4 +107,4 @@ const placeCustomerOrder = async (req, res) => {
     }
 }
 
-module.exports = {getCustomerOrders, getSingleCustomerOrder};
+module.exports = {getCustomerOrders, getSingleCustomerOrder, placeCustomerOrder};
