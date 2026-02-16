@@ -1,16 +1,32 @@
 {
   "name": "with-aws",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Serverless e-commerce backend using AWS Amplify",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sandbox": "npx ampx sandbox",
+    "deploy": "npx ampx deploy",
+    "delete": "npx ampx sandbox delete",
+    "generate": "npx ampx generate graphql-client-code --out ./src/graphql"
   },
-  "keywords": [],
+  "keywords": [
+    "amplify",
+    "serverless",
+    "ecommerce",
+    "aws"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "@aws-amplify/backend": "^1.16.1"
+    "@aws-amplify/backend": "^1.16.1",
+    "@aws-amplify/backend-cli": "^1.5.1",
+    "aws-cdk-lib": "^2.172.0",
+    "constructs": "^10.4.2",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2"
   }
 }
