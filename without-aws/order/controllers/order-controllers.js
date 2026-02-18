@@ -107,4 +107,66 @@ const placeCustomerOrder = async (req, res) => {
     }
 }
 
-module.exports = {getCustomerOrders, getSingleCustomerOrder, placeCustomerOrder};
+const deleteCustomerOrder = async (req, res) => {
+    try {
+        const order_id = req.params.orderId;
+        const orderDetailsByID = await Order.find({order_id});
+
+        const deletedOrder = await Order.findByIdAndDelete(orderDetailsByID);
+
+        if (!deletedOrder) {
+            return res.status(404).json({
+                success: false,
+                message: "Order is not found with this ID",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: deletedOrder,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong. Please try again.'
+        });
+    }
+}
+
+const updateCustomerOrder = async (req, res) => {
+    try {
+        const updatedOrderData = req.body;
+        const order_id = req.params.orderId;
+        const orderDetailsByID = await Order.find({order_id});
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderDetailsByID,
+            updatedOrderData,
+            {
+                new: true,
+            }
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({
+                success: false,
+                message: "Order is not found with this ID",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: updatedOrder,
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong. Please try again.'
+        });
+    }
+}
+
+module.exports = {getCustomerOrders, getSingleCustomerOrder, placeCustomerOrder, deleteCustomerOrder, updateCustomerOrder};
