@@ -1,6 +1,7 @@
 const Order = require('../model/Order');
 const Product = require('../../product/models/Product');
-import { v4 as uuidv4 } from 'uuid';
+const uuid = require('uuid');
+const uuidv4 = uuid.v4;
 
 const getCustomerOrders = async (req, res) => {
     const authHeader = req.headers['authorization'];
